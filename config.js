@@ -9,7 +9,6 @@ window.SUPABASE_CONFIG = {
   // URL base do seu projeto Supabase
   url: "https://mkgbeemjhvpvjmqbwtfl.supabase.co",
 
-  // Cole aqui a sua chave pública 'anon' (encontrada no painel do Supabase: Project Settings > API > anon public)
-  // Se preferir, você também pode digitá-la diretamente pelo botão de configurações na própria página web.
-  anonKey: ""
+  // Cole aqui a sua chave pública 'anon'
+  anonKey: "sb_publishable_A3OBfHsIlq5svO2CB13C-g_M1DVkfjr"
 };
