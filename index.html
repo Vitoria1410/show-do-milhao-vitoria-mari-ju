@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Show do Milhão | Ranking</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero">
+        <p class="eyebrow">Ranking oficial</p>
+        <h1>Show do <span>Milhão</span></h1>
+        <p>As 10 melhores partidas, atualizadas diretamente do banco de dados.</p>
+      </header>
+
+      <section class="panel" aria-labelledby="ranking-title">
+        <div class="toolbar">
+          <div>
+            <h2 id="ranking-title">Classificação</h2>
+            <p id="updated-at" aria-live="polite">Carregando resultados...</p>
+          </div>
+          <button id="refresh" type="button">Atualizar ranking</button>
+        </div>
+
+        <div id="status" class="status" role="status"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Posição</th>
+                <th>Apelido</th>
+                <th>Prêmio</th>
+                <th>Tempo</th>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody id="ranking-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
