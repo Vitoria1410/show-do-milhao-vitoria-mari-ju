@@ -1,0 +1,6 @@
+# Este projeto utiliza exclusivamente bibliotecas nativas do Python 3 (standard library):
+# - urllib.request, urllib.parse, urllib.error
+# - json, os, random, time, uuid, pathlib, datetime
+#
+# Nenhuma instalação externa via pip é estritamente obrigatória para rodar o jogo.
+# Caso queira rodar localmente com pytest ou linters no futuro, estão listados abaixo:

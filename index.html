@@ -3,32 +3,54 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Show do Milhão | Ranking</title>
+    <title>Show do Milhão | Ranking Oficial</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="page">
       <header class="hero">
-        <p class="eyebrow">Ranking oficial</p>
+        <p class="eyebrow">Ranking Oficial</p>
         <h1>Show do <span>Milhão</span></h1>
-        <p>As 10 melhores partidas, atualizadas diretamente do banco de dados.</p>
+        <p>As 10 melhores partidas por jogo, atualizadas diretamente do banco de dados online.</p>
       </header>
 
       <section class="panel" aria-labelledby="ranking-title">
         <div class="toolbar">
-          <div>
-            <h2 id="ranking-title">Classificação</h2>
-            <p id="updated-at" aria-live="polite">Carregando resultados...</p>
+          <div class="filter-group">
+            <label for="game-filter">Filtrar por jogo:</label>
+            <select id="game-filter" aria-label="Selecione o jogo">
+              <option value="">Carregando jogos...</option>
+            </select>
           </div>
-          <button id="refresh" type="button">Atualizar ranking</button>
+
+          <div class="actions">
+            <button id="refresh" type="button">🔄 Atualizar ranking</button>
+            <button id="btn-config" type="button" class="btn-secondary" title="Configurar chave do Supabase">⚙️ Chave Supabase</button>
+          </div>
+        </div>
+
+        <div id="config-panel" class="config-panel hidden">
+          <label for="input-anon-key">Chave pública (anon key) do Supabase:</label>
+          <div class="config-row">
+            <input type="text" id="input-anon-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." />
+            <button id="btn-save-key" type="button">Salvar Chave</button>
+          </div>
+          <small>Encontrada em: <em>Supabase Dashboard > Project Settings > API > Project API keys (anon / public)</em>.</small>
+        </div>
+
+        <div class="header-status">
+          <h2 id="ranking-title">Classificação</h2>
+          <p id="updated-at" aria-live="polite">Aguardando consulta...</p>
         </div>
 
         <div id="status" class="status" role="status"></div>
+
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th>Posição</th>
+                <th>Jogo</th>
                 <th>Apelido</th>
                 <th>Prêmio</th>
                 <th>Tempo</th>
@@ -39,7 +61,13 @@
           </table>
         </div>
       </section>
+
+      <footer class="footer">
+        <p>Projeto Show do Milhão — Python, Supabase e GitHub Pages.</p>
+      </footer>
     </main>
+
+    <script src="config.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
