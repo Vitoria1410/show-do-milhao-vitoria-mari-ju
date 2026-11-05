@@ -1,7 +1,7 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const repo=require('path').resolve(__dirname,'..')+'/';
 const elements={};
-function el(){return {value:'1',textContent:'',innerHTML:'',disabled:false,options:[{text:'Jogo'}],selectedIndex:0,children:[],classList:{toggle(){},add(){}},addEventListener(){},replaceChildren(){this.children=[]},append(x){this.children.push(x)}}}
+function el(){return {value:'1',textContent:'',innerHTML:'',disabled:false,options:[{text:'Jogo'}],selectedIndex:0,children:[],classList:{toggle(){},add(){}},addEventListener(){},replaceChildren(...items){this.children=[...items]},append(x){this.children.push(x)}}}
 const context={document:{querySelector(s){return elements[s]??=el()},createElement:el},window:{SUPABASE_CONFIG:{url:'https://example.com',anonKey:'teste'}},localStorage:{getItem(){return ''}},console:{error(){},warn(){}},Intl,Date,Map,Number,String,atob,alert(){},fetch:async()=>({ok:true,json:async()=>[]})};
 vm.createContext(context); vm.runInContext(fs.readFileSync(repo+'app.js','utf8'),context);
 const checks=[];
@@ -22,5 +22,14 @@ async function test(name,fn){try{await fn();checks.push('PASSOU: '+name)}catch(e
  await test('Falha da view não consulta partidas brutas',async()=>{let chamadas=[];context.fetch=async u=>{chamadas.push(u);return {ok:false,status:403}};elements['#game-filter'].value='1';await context.loadRanking();assert.equal(chamadas.length,1);assert.match(chamadas[0],/rest\/v1\/ranking\?/);assert.match(elements['#status'].textContent,/Não foi possível/)});
  await test('Chave moderna usa apenas apikey',()=>{const h=context.getHeaders('sb_publishable_exemplo');assert.equal(h.apikey,'sb_publishable_exemplo');assert.equal(h.Authorization,undefined)});
  await test('Site rejeita chave administrativa moderna e legada',()=>{assert.throws(()=>context.getHeaders('sb_secret_exemplo'));const payload=Buffer.from(JSON.stringify({role:'service_role'})).toString('base64');assert.throws(()=>context.getHeaders('cabecalho.'+payload+'.assinatura'))});
+ await test('Consultas simultâneas não duplicam linhas nem exibem resposta antiga',async()=>{
+  const pendentes=[];context.fetch=()=>new Promise(resolve=>pendentes.push(resolve));elements['#game-filter'].value='1';
+  const primeira=context.loadRanking(),segunda=context.loadRanking();
+  const item=apelido=>({posicao:1,nome_jogo:'Jogo',apelido,valor_ganho:1000,tempo_segundos:30,data_hora:'2026-11-04T12:00:00Z'});
+  pendentes[1]({ok:true,json:async()=>[item('Atual')]});await segunda;
+  pendentes[0]({ok:true,json:async()=>[item('Antigo')]});await primeira;
+  assert.equal(elements['#ranking-body'].children.length,1);
+  assert.equal(elements['#ranking-body'].children[0].children[2].textContent,'Atual');
+ });
  console.log(checks.join('\n'));
 })();

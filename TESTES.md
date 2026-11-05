@@ -6,7 +6,7 @@ Data: 04/11/2026 (America/Sao_Paulo). Executor: Codex, a pedido da equipe.
 
 - 18 testes Python aprovados: regras, prêmios, sorteio, entradas, encerramento, ranking, pendências, idempotência, cabeçalhos de chaves modernas/legadas e ocultação de credenciais em erro.
 - Três dos 18 testes Python executam a consulta SQL real da view em SQLite em memória: separação por jogo e melhor apelido, desempates e top 10 após classificar mais de mil partidas. Esses testes validam a lógica SQL comum e não substituem a verificação das permissões no PostgreSQL.
-- 9 testes JavaScript aprovados: formatação, renderização como texto, estado vazio, rede indisponível, filtro/top 10, erro ao listar jogos, ausência de consulta à tabela bruta, cabeçalho moderno e rejeição de chaves administrativas no site.
+- 10 testes JavaScript aprovados: formatação, renderização como texto, estado vazio, rede indisponível, filtro/top 10, erro ao listar jogos, ausência de consulta à tabela bruta, cabeçalho moderno e rejeição de chaves administrativas no site.
 - Exemplos Python das perguntas revisadas executados com sucesso; fontes e justificativas das 18 perguntas estão em REVISAO_PERGUNTAS.md.
 - Notebook Colab validado estruturalmente, sem saídas nem credenciais. Execução pela equipe no Colab ainda não confirmada.
 
@@ -52,3 +52,12 @@ Essas evidências históricas não comprovam, por si só, o envio privado após 
 - Confirmar com o professor a equipe de três integrantes, pois o enunciado solicita dupla.
 - Reconstruções de prompts não comprovam o histórico original completo.
 - Demonstrar domínio individual e realizar o envio no Moodle.
+
+
+## Ajuste final — perguntas acessíveis e duplicação visual
+
+As 18 perguntas passaram a abordar Python básico, preservando seis em cada nível. Expressões e respostas foram conferidas no interpretador; REVISAO_PERGUNTAS.md e database.sql foram atualizados. A migração altera perguntas existentes sem apagar partidas.
+
+A captura enviada pela solicitante mostrava o ranking inteiro repetido. Um teste com duas consultas simultâneas reproduziu o problema antes da correção: a tabela ficava com duas linhas quando deveria conter uma. Após a correção, a tabela substitui suas linhas em uma única operação e ignora respostas de requisições antigas. O teste passou, com uma linha e os dados da consulta mais recente. Isso corrige a repetição visual, preservando os registros do banco.
+
+A solicitante informou ter concluído uma partida no Colab e enviou captura do ranking com apelido vit e R$ 1.000.000,00, duração de 5min 22s. A nova seleção de perguntas exige iniciar outra partida; uma partida já aberta continua usando as perguntas anteriormente carregadas.

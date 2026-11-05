@@ -78,3 +78,6 @@ Não pode ser validado pelo assistente. Cada integrante deve explicar e modifica
 5. Abrir o ZIP final e conferir os arquivos. Anexar no Moodle, colar os dados de MOODLE.txt e verificar a confirmação do envio.
 
 Esta comparação não atribui nota nem declara concluídos os itens que dependem do professor ou da execução da equipe.
+
+
+Atualização final: perguntas limitadas a Python básico em três níveis; teste de regressão para consultas simultâneas do ranking aprovado. O nome histórico do jogo foi mantido para preservar a associação das partidas existentes.

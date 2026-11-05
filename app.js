@@ -139,7 +139,9 @@ async function loadGames() {
 }
 
 // Carregar o ranking oficial para o jogo selecionado
+let rankingRequest = 0;
 async function loadRanking() {
+  const requestId = ++rankingRequest;
   const { url, anonKey } = getSupabaseConfig();
   const selectedGameId = gameFilter.value;
 
@@ -163,21 +165,24 @@ async function loadRanking() {
     const response = await fetch(viewUrl, { headers: getHeaders(anonKey) });
     if (!response.ok) throw new Error(`Falha HTTP ${response.status}`);
     const items = await response.json();
+    if (requestId !== rankingRequest) return;
+    body.replaceChildren();
 
     if (!items.length) {
       status.textContent = 'Ainda não há partidas registradas para este jogo.';
     } else {
       status.textContent = '';
-      items.forEach((item) => body.append(createRow(item)));
+      body.replaceChildren(...items.map(createRow));
     }
 
     updatedAt.textContent = `Atualizado em ${new Date().toLocaleString('pt-BR')}`;
   } catch (error) {
+    if (requestId !== rankingRequest) return;
     console.error('Erro ao consultar ranking:', error);
     status.textContent = 'Não foi possível consultar os resultados online. Verifique sua conexão e a chave configurada.';
     updatedAt.textContent = '';
   } finally {
-    refreshButton.disabled = false;
+    if (requestId === rankingRequest) refreshButton.disabled = false;
   }
 }
 

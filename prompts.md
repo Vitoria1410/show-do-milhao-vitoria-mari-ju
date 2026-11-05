@@ -260,3 +260,18 @@ faz isso, eu te dou permissao
 Na revisão anterior, a solicitante havia escolhido manter as permissões e registrar a pendência. O pedido acima substitui essa escolha. A descrição anterior é histórica; o estado atual da implantação está em TESTES.md.
 
 Resultado real desta revisão: 18 testes Python e 9 JavaScript aprovados; oito consultas de permissões aprovadas online. Migrações e build do GitHub Pages concluídos. Nenhuma chave privada foi inserida nos arquivos ou fornecida ao assistente.
+
+
+## Pedidos reais de ajuste final
+
+Data: 04/11/2026. Responsável: integrante solicitante, sem autoria individual confirmada. Ferramenta: Codex; modelo exato não confirmado. Objetivo: tornar as perguntas acessíveis e corrigir repetição visual do ranking. Arquivos: database.sql, supabase/migrations, app.js, testes e documentação. Uso: substituição por perguntas de Python básico e proteção contra respostas simultâneas. Testes: gabaritos executáveis conferidos e teste de regressão de concorrência em TESTES.md.
+
+```text
+faz issoo ent rapidão e ja me mnada tudo q tenho q mandar eu tenho menos de 20 minutos
+```
+
+```text
+vihs e ele ta duplicando as pessoa
+```
+
+O segundo pedido incluiu uma captura com o bloco inteiro do ranking repetido. A correção preserva as partidas no banco e troca as linhas da tabela de forma atômica, descartando respostas antigas de consultas sobrepostas.

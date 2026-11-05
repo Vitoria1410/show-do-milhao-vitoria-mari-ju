@@ -17,7 +17,7 @@ O enunciado solicita dupla; a composição de três integrantes deve ser confirm
 
 ## Regras
 
-Informe um apelido não vazio. Cada partida sorteia nove perguntas sem repetição: três fáceis, três médias e três difíceis. O banco inicial contém dezoito perguntas, seis por dificuldade, com quatro alternativas e um gabarito por pergunta.
+Informe um apelido não vazio. Cada partida sorteia nove perguntas sem repetição: três fáceis, três médias e três difíceis. O banco inicial contém dezoito perguntas de Python básico, seis por dificuldade, com quatro alternativas e um gabarito por pergunta. Os desafios difíceis combinam listas, funções, dicionários e laços; não exigem conhecimentos de redes neurais.
 
 | Acertos | Prêmio fictício |
 |---|---|

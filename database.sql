@@ -5,7 +5,7 @@
 -- 1. Tabelas (jogos, perguntas, partidas)
 -- 2. View do ranking oficial com regras de desempate e melhor partida por apelido
 -- 3. Permissões de acesso (RLS e Grants para anon)
--- 4. Inserção de 18 perguntas revisadas (6 fáceis, 6 médias, 6 difíceis) sobre Python e IA, com fontes
+-- 4. Inserção de 18 perguntas revisadas (6 fáceis, 6 médias, 6 difíceis) sobre Python básico, com fontes
 -- ====================================================================
 
 -- 1. TABELA JOGOS
@@ -141,17 +141,17 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_perguntas_enunciado ON public.perguntas (e
 
 INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternativa_c, alternativa_d, correta, dificuldade, fonte) VALUES
 (
-    'Qual comando é utilizado em Python para exibir uma mensagem no console?',
+    'Qual função mostra uma mensagem na tela em Python?',
     'echo()',
     'print()',
     'console.log()',
-    'write()',
+    'show()',
     'B',
     'facil',
     'https://docs.python.org/3/library/functions.html#print'
 ),
 (
-    'Qual símbolo é utilizado para iniciar um comentário de linha única em Python?',
+    'Qual símbolo inicia um comentário de uma linha em Python?',
     '//',
     '--',
     '#',
@@ -161,7 +161,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'https://docs.python.org/3/reference/lexical_analysis.html#comments'
 ),
 (
-    'Qual tipo de dado é retornado pela expressão 5 > 2 em Python?',
+    'Qual é o tipo do resultado de 5 > 2?',
     'int',
     'str',
     'bool',
@@ -171,17 +171,17 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'https://docs.python.org/3/library/stdtypes.html#comparisons'
 ),
 (
-    'O que significa a sigla IA no contexto da tecnologia moderna?',
-    'Interface Avançada',
-    'Inteligência Artificial',
-    'Internet Automatizada',
-    'Informação Algorítmica',
+    'Qual é o tipo de dado do texto "Olá" em Python?',
+    'int',
+    'str',
+    'bool',
+    'float',
     'B',
     'facil',
-    'https://aima.cs.berkeley.edu/'
+    'https://docs.python.org/3/library/stdtypes.html#text-sequence-type-str'
 ),
 (
-    'Qual palavra-chave é usada em Python para declarar uma função?',
+    'Qual palavra inicia a definição de uma função em Python?',
     'function',
     'func',
     'define',
@@ -191,11 +191,11 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'https://docs.python.org/3/reference/compound_stmts.html#function-definitions'
 ),
 (
-    'Em Python, qual estrutura de dados é ordenada, mutável e delimitada por colchetes [ ]?',
-    'Lista (list)',
-    'Tupla (tuple)',
-    'Dicionário (dict)',
-    'Conjunto (set)',
+    'Qual destas opções representa uma lista em Python?',
+    '[1, 2, 3]',
+    '(1, 2, 3)',
+    '{1, 2, 3}',
+    '"1, 2, 3"',
     'A',
     'facil',
     'https://docs.python.org/3/tutorial/datastructures.html'
@@ -206,61 +206,61 @@ ON CONFLICT (enunciado) DO NOTHING;
 
 INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternativa_c, alternativa_d, correta, dificuldade, fonte) VALUES
 (
-    'Qual é a principal diferença entre uma lista e uma tupla em Python?',
-    'A lista aceita números e a tupla aceita apenas textos',
-    'A lista é mutável e a tupla é imutável',
-    'A tupla é delimitada por chaves e a lista por parênteses',
-    'A lista não permite elementos duplicados',
+    'Qual é a diferença entre uma lista e uma tupla?',
+    'Só a lista aceita números',
+    'A lista pode ser alterada; a tupla é imutável',
+    'A tupla usa colchetes',
+    'Listas não aceitam repetidos',
     'B',
     'media',
     'https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range'
 ),
 (
-    'Qual biblioteca em Python é amplamente utilizada para manipulação e análise de dados em tabelas (DataFrames)?',
-    'Pandas',
-    'Flask',
-    'Pygame',
-    'Tkinter',
+    'Qual é o resultado de len([10, 20, 30])?',
+    '3',
+    '2',
+    '30',
+    '60',
     'A',
     'media',
-    'https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html'
+    'https://docs.python.org/3/library/functions.html#len'
 ),
 (
-    'No aprendizado de máquina supervisionado, qual é o papel do conjunto de dados de treino?',
-    'Avaliar a velocidade de processamento da placa de vídeo',
-    'Ajustar os parâmetros do modelo a partir de exemplos com rótulos conhecidos',
-    'Substituir o algoritmo por uma busca em largura',
-    'Limpar arquivos temporários do sistema operacional',
+    'Quais valores são percorridos por for i in range(3)?',
+    '1, 2, 3',
+    '0, 1, 2',
+    '0, 1, 2, 3',
+    'Somente 3',
     'B',
     'media',
-    'https://developers.google.com/machine-learning/intro-to-ml/supervised'
+    'https://docs.python.org/3/tutorial/controlflow.html#the-range-function'
 ),
 (
-    'Qual método de dicionário em Python retorna o valor de uma chave sem disparar KeyError se ela não existir?',
-    'dict.fetch()',
-    'dict.pop()',
-    'dict.get()',
-    'dict.find()',
+    'Se notas = {"Ana": 5}, qual é o resultado de notas["Ana"]?',
+    '"Ana"',
+    '0',
+    '5',
+    'Erro sempre',
     'C',
     'media',
-    'https://docs.python.org/3/library/stdtypes.html#dict.get'
+    'https://docs.python.org/3/tutorial/datastructures.html#dictionaries'
 ),
 (
-    'O que é o fenômeno de Overfitting (sobreajuste) em modelos de Machine Learning?',
-    'Quando o modelo decora os dados de treino e tem baixo desempenho em dados novos',
-    'Quando o algoritmo roda rápido demais e perde precisão',
-    'Quando o modelo não consegue aprender nem os padrões do treino',
-    'Quando o banco de dados fica sem espaço em disco',
+    'Depois de numeros = [1, 2] e numeros.append(3), como fica a lista?',
+    '[1, 2, 3]',
+    '[3]',
+    '[3, 1, 2]',
+    '[1, 2]',
     'A',
     'media',
-    'https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html'
+    'https://docs.python.org/3/tutorial/datastructures.html'
 ),
 (
-    'Qual bloco é utilizado em Python para capturar e tratar exceções durante a execução?',
+    'Qual estrutura captura e trata um erro em Python?',
     'try ... catch',
     'try ... except',
-    'begin ... rescue',
-    'check ... handle',
+    'if ... error',
+    'for ... error',
     'B',
     'media',
     'https://docs.python.org/3/reference/compound_stmts.html#the-try-statement'
@@ -271,63 +271,73 @@ ON CONFLICT (enunciado) DO NOTHING;
 
 INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternativa_c, alternativa_d, correta, dificuldade, fonte) VALUES
 (
-    'Qual arquitetura apresentada no artigo "Attention Is All You Need" (2017) é baseada em mecanismos de atenção?',
-    'Redes Convolucionais 3D',
-    'Transformer',
-    'Algoritmo Genético Recorrente',
-    'Máquinas de Vetores de Suporte com Kernel RBF',
+    'Considere a função:
+def dobro(x):
+    return x * 2
+Qual é o resultado de dobro(4)?',
+    '4',
+    '8',
+    '6',
+    '2',
     'B',
     'dificil',
-    'https://arxiv.org/abs/1706.03762'
+    'https://docs.python.org/3/tutorial/controlflow.html#defining-functions'
 ),
 (
-    'Em Python, o que caracteriza uma função geradora (generator function)?',
-    'Usa a palavra-chave yield e produz valores sob demanda (lazy evaluation)',
-    'Compila o código diretamente para C++ em tempo de execução',
-    'Executa obrigatoriamente em uma thread separada',
-    'Não pode receber argumentos',
+    'Qual valor fica em total?
+total = 0
+for n in range(1, 4):
+    total = total + n',
+    '6',
+    '4',
+    '10',
+    '3',
     'A',
     'dificil',
-    'https://peps.python.org/pep-0255/'
+    'https://docs.python.org/3/tutorial/controlflow.html#the-range-function'
 ),
 (
-    'Em uma compilação de CPython com GIL habilitado, qual é o efeito do Global Interpreter Lock?',
-    'Impede que scripts Python usem conexões de rede',
-    'Garante que apenas uma thread execute bytecode Python por vez em um processo',
-    'Limita o uso de memória a no máximo 4 GB',
-    'Obriga todas as variáveis a terem tipagem estática',
+    'Se numeros = [10, 20, 30], quanto vale numeros[1] + numeros[2]?',
+    '30',
+    '50',
+    '40',
+    '60',
     'B',
     'dificil',
-    'https://docs.python.org/3/glossary.html#term-global-interpreter-lock'
+    'https://docs.python.org/3/tutorial/datastructures.html'
 ),
 (
-    'No treinamento de redes neurais profundas, qual problema ocorre quando os gradientes diminuem exponencialmente nas camadas iniciais?',
-    'Explosão do gradiente (Exploding Gradient)',
-    'Desvanecimento do gradiente (Vanishing Gradient)',
-    'Underfitting assintótico',
-    'Convergência estocástica nula',
+    'Quantos números pares há na lista [1, 2, 3, 4]?
+Dica: n % 2 == 0 verifica se n é par.',
+    '1',
+    '2',
+    '3',
+    '4',
     'B',
     'dificil',
-    'https://www.deeplearningbook.org/contents/rnn.html'
+    'https://docs.python.org/3/tutorial/controlflow.html'
 ),
 (
-    'Qual é a complexidade média de tempo para verificar se uma chave existe em um dicionário (dict) em Python?',
-    'O(n)',
-    'O(log n)',
-    'O(1)',
-    'O(n²)',
+    'Se pontos = {"Ana": 10}, qual é o resultado de pontos.get("Bia", 0)?',
+    '10',
+    '"Bia"',
+    '0',
+    'KeyError',
     'C',
     'dificil',
-    'https://wiki.python.org/python/language/TimeComplexity.html'
+    'https://docs.python.org/3/library/stdtypes.html#dict.get'
 ),
 (
-    'Qual técnica é usada para enriquecer o contexto de um LLM com dados externos recuperados de um banco vetorial antes de gerar a resposta?',
-    'RAG (Retrieval-Augmented Generation)',
-    'GAN (Generative Adversarial Network)',
-    'PCA (Principal Component Analysis)',
-    'BERT Fine-Tuning sem contexto',
+    'Considere:
+def somar(a, b):
+    return a + b
+Qual é o resultado de somar(2, 3) * 2?',
+    '10',
+    '7',
+    '5',
+    '12',
     'A',
     'dificil',
-    'https://arxiv.org/abs/2005.11401'
+    'https://docs.python.org/3/tutorial/controlflow.html#defining-functions'
 )
 ON CONFLICT (enunciado) DO NOTHING;
