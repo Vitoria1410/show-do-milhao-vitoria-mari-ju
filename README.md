@@ -102,7 +102,7 @@ Leia TESTES.md. Os testes locais exercitam entradas simuladas e não substituem 
 
 **Histórico de IA pendente:** os prompts reais anteriores a este chat não foram recuperados. prompts.md distingue a transcrição disponível de exemplos simulados e não garante a completude do histórico do projeto.
 
-**Evidências:** os registros automatizados estão em evidencias/. Capturas da mesma partida no terminal e no site ainda devem ser conferidas, conforme TESTES.md. Não confundir saídas em texto com capturas de tela.
+**Evidências:** os registros automatizados estão em evidencias/. Há capturas reais da mesma partida na janela opcional Python e no site, conforme TESTES.md. A janela Tkinter chama as funções reais de jogo.py; não é uma captura do terminal.
 
 ## Rodar os testes locais
 
@@ -135,3 +135,9 @@ Alternativamente, informe a chave pública quando o jogo solicitar. Nunca compar
 ## Apresentação individual
 
 Cada integrante precisa conseguir explicar e modificar uma função. Estudem calcular_premio e os índices da lista, sortear_perguntas e random.sample, jogar e suas condições de parada, além de salvar_partida e a reutilização do UUID. A avaliação de domínio individual depende da apresentação e não pode ser comprovada por estes testes.
+
+
+## Demonstração gráfica opcional
+
+Execute python tests/demonstracao_gui.py para abrir uma janela Tkinter que usa as funções do jogo, consulta as perguntas reais e registra uma partida com o apelido EVIDENCIA_AC04. Usa a chave pública de config.js e registra dados reais no Supabase. Para o trabalho principal, use python jogo.py no terminal. O guia EXPLICACAO.md ajuda a preparar a apresentação individual.
+

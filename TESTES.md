@@ -53,7 +53,7 @@ Esses testes usam DOM e fetch simulados em Node.js; não substituem a verificaç
 2. Documentação: nomes e turma indefinidos. Atualizados conforme informação da solicitante.
 3. Histórico de IA: arquivo antigo não podia ser confirmado como histórico real e continha exemplo de prêmio incorreto na desistência. Substituído por mensagens reais disponíveis e simulações identificadas. O teste confirma R$ 10.000,00 após três acertos.
 4. .env.example tinha variável de backend Vercel que o jogo não utiliza. Alinhado a SUPABASE_URL e SUPABASE_KEY; não inclui credenciais reais.
-5. GitHub Pages estava desativado; o link retornava 404. A publicação desta revisão será verificada antes do fechamento do pacote.
+5. GitHub Pages estava desativado; o link retornava 404. Pages foi ativado na branch main, pasta raiz. O build concluiu e o site foi aberto no navegador com consulta real ao Supabase.
 
 ## Pendências declaradas
 
@@ -62,7 +62,26 @@ Esses testes usam DOM e fetch simulados em Node.js; não substituem a verificaç
 - **Equipe:** foram informados três integrantes; o enunciado solicita dupla. Confirmar com o professor.
 - **Fontes das perguntas:** existem referências em database.sql, mas a checagem externa individual de todas as 18 fontes e gabaritos não foi realizada nesta sessão. A validação estrutural não comprova revisão conceitual.
 - **Domínio individual:** não avaliado; depende de cada integrante explicar e modificar código na apresentação.
-- **Evidências visuais:** a saída textual automatizada não substitui capturas do jogo no terminal e do site mostrando a mesma partida. A conferência visual será registrada separadamente, se obtida.
+- **Evidência de execução:** foram obtidas capturas reais da janela Python de demonstração e do site para a mesma partida EVIDENCIA_AC04. A janela utiliza as funções reais do jogo e Tkinter; não é uma captura do terminal. Se o professor exigir especificamente o terminal, repetir a execução pelo comando python jogo.py e capturá-la.
 - **Persistência após reinício:** o registro foi consultado em nova requisição, mas não foi feita uma sessão humana completa de fechar e reabrir o programa.
 
 Não há fundamento para garantir nota máxima. Os testes aprovados comprovam somente os cenários descritos.
+
+## Verificação visual e site com Python fechado
+
+Executada demonstração real pela janela opcional tests/demonstracao_gui.py, que chama as funções de jogo.py. A janela buscou as 18 perguntas online, aceitou corrigir uma entrada inválida e recebeu X para desistir na primeira pergunta.
+
+- Jogo: Show do Milhão - Python e IA.
+- Apelido: EVIDENCIA_AC04.
+- Valor: R$ 0,00 fictícios; 0 acertos; encerramento por desistência.
+- Duração real registrada: 47,07 segundos; site formatou como 0min 47s.
+- UUID: 57eecb7b-d8ab-4e30-a944-6788e8e3848e.
+- Enviado duas vezes com mesmo UUID; consulta confirmou somente 1 registro.
+- Captura real da execução: evidencias/jogo_python.png.
+- Captura real do site: evidencias/ranking_online.jpg.
+- Dados e saída completa: evidencias/demonstracao_partida.json e evidencias/demonstracao_python.txt.
+
+Após encerrar a janela Python, foi confirmado que não havia processo pythonw em execução. O botão Atualizar do site continuou consultando o Supabase e exibiu a mesma partida na posição 4. A captura do ranking foi salva depois desse teste, em 04/11/2026, aproximadamente 21h25, America/Sao_Paulo.
+
+O build inicial validado no GitHub Pages correspondeu ao commit ef2e267fa56564eba3021887048a1383a0bdddd1. A inclusão final destas evidências será publicada no commit de fechamento; o código do site permanece igual ao testado.
+

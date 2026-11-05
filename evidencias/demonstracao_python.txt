@@ -1,0 +1,43 @@
+DEMONSTRAÇÃO REAL — funções de jogo.py em janela Tkinter
+Partida de teste identificada pelo apelido EVIDENCIA_AC04.
+Dados reais do Supabase; esta janela não é o terminal.
+
+Consultando banco de perguntas online no Supabase...
+Sucesso: 18 perguntas válidas carregadas!
+
+=======================================================
+             SHOW DO MILHÃO
+=======================================================
+
+Boa sorte, EVIDENCIA_AC04!
+Digite X caso queira desistir e parar com o prêmio atual.
+
+=======================================================
+PERGUNTA 1/9 — DIFICULDADE: FACIL
+VALOR DESTA ETAPA: R$ 1.000,00
+PRÊMIO GARANTIDO: R$ 0,00
+
+Qual comando é utilizado em Python para exibir uma mensagem no console?
+A) echo()
+B) print()
+C) console.log()
+D) write()
+
+Sua resposta [A/B/C/D ou X para parar]: 
+Entrada inválida! Digite apenas A, B, C, D ou X.
+
+Sua resposta [A/B/C/D ou X para parar]: x
+
+Você optou por parar e garantiu seu prêmio acumulado.
+
+=======================================================
+                 FIM DE JOGO!
+=======================================================
+Jogador: EVIDENCIA_AC04
+Acertos: 0/9
+Prêmio Final: R$ 0,00
+Tempo da partida: 47.07s
+Jogo: Show do Milhão - Python e IA
+Envio confirmado no Supabase.
+UUID: 57eecb7b-d8ab-4e30-a944-6788e8e3848e
+Envios do mesmo UUID: 2; registros encontrados: 1
