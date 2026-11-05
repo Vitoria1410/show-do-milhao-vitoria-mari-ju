@@ -1,143 +1,96 @@
-# Show do Milhão — Python, Supabase e Ranking Web
+# Show do Milhão — Python, Supabase e ranking web
 
-Projeto interdisciplinar de desenvolvimento de um jogo de perguntas e respostas inspirado no **Show do Milhão**, executado em Python (Google Colab / PyCharm), com persistência em banco de dados online (**Supabase**) e exibição do ranking em tempo real no **GitHub Pages**.
+Jogo didático no terminal, com perguntas e resultados no Supabase e ranking estático no GitHub Pages. Os prêmios são fictícios.
 
----
+## Equipe
 
-## Identificação da equipe
 - Mariana Vincente
 - Julia Santana
 - Vitória Barreto
 - Turma: Primeiro IA A
+
+O enunciado solicita dupla; a composição de três integrantes deve ser confirmada com o professor.
+
 - Repositório: https://github.com/Vitoria1410/show-do-milhao-vitoria-mari-ju
 - Site: https://vitoria1410.github.io/show-do-milhao-vitoria-mari-ju/
+- Colab: https://colab.research.google.com/github/Vitoria1410/show-do-milhao-vitoria-mari-ju/blob/main/Jogar_no_Colab.ipynb
 
-O enunciado solicita uma dupla; a equipe informada tem três integrantes. Confirmar essa composição com o professor.
+## Regras
 
----
+Informe um apelido não vazio. Cada partida sorteia nove perguntas sem repetição: três fáceis, três médias e três difíceis. O banco inicial contém dezoito perguntas, seis por dificuldade, com quatro alternativas e um gabarito por pergunta.
 
-## 🎮 Regras do Jogo
-1. **Identificação:** Solicita um apelido não vazio antes de iniciar.
-2. **Perguntas:** 
-   - O banco possui pelo menos 18 perguntas revisadas sobre **Python e Inteligência Artificial** (6 fáceis, 6 médias e 6 difíceis).
-   - A partida sorteia **9 perguntas sem repetição**, rigorosamente na ordem: 3 fáceis, 3 médias e 3 difíceis.
-3. **Premiação Progressiva (Fictícia):**
-   - **Fácil:** 1º acerto: R$ 1.000,00 | 2º acerto: R$ 5.000,00 | 3º acerto: R$ 10.000,00
-   - **Média:** 4º acerto: R$ 25.000,00 | 5º acerto: R$ 50.000,00 | 6º acerto: R$ 100.000,00
-   - **Difícil:** 7º acerto: R$ 200.000,00 | 8º acerto: R$ 500.000,00 | 9º acerto: R$ 1.000.000,00
-   - Os valores **não são somados**; cada acerto substitui o valor anterior pelo prêmio da etapa.
-4. **Condições de Término:**
-   - **Erro:** Encerra a partida imediatamente e mantém o último prêmio alcançado (ou R$ 0,00 se errar a 1ª).
-   - **Desistência:** O jogador pode digitar `X` a qualquer momento para parar e garantir o prêmio acumulado.
-   - **Vitória Máxima:** Ao acertar as 9 perguntas, conquista R$ 1.000.000,00.
-5. **Cronometragem:** Mede a duração da partida da primeira pergunta ao encerramento com `time.perf_counter()`, desconsiderando o tempo do menu e de envio ao banco.
+| Acertos | Prêmio fictício |
+|---|---|
+| 0 | R$ 0,00 |
+| 1 | R$ 1.000,00 |
+| 2 | R$ 5.000,00 |
+| 3 | R$ 10.000,00 |
+| 4 | R$ 25.000,00 |
+| 5 | R$ 50.000,00 |
+| 6 | R$ 100.000,00 |
+| 7 | R$ 200.000,00 |
+| 8 | R$ 500.000,00 |
+| 9 | R$ 1.000.000,00 |
 
----
+Cada acerto substitui o valor anterior; não há soma. A partida termina no primeiro erro, por desistência com X ou ao completar nove acertos. O jogador mantém o último prêmio alcançado. Entradas inválidas permitem nova tentativa na mesma questão.
 
-## 🗄️ Estrutura do Banco de Dados (Supabase)
-O script de criação completo está no arquivo [`database.sql`](database.sql):
-- **`jogos`:** `id`, `nome`
-- **`perguntas`:** `id`, `enunciado`, `alternativa_a`, `alternativa_b`, `alternativa_c`, `alternativa_d`, `correta`, `dificuldade`, `fonte`
-- **`partidas`:** `id` (UUID único), `jogo_id`, `apelido`, `valor_ganho`, `tempo_segundos`, `acertos`, `motivo_encerramento`, `data_hora`
-- **`ranking` (View Oficial):** Agrupa por jogo, seleciona apenas a melhor partida de cada apelido e aplica os critérios de desempate:
-  1. Maior valor ganho
-  2. Menor tempo em segundos
-  3. Data mais antiga
-  4. ID da partida
+O menu oferece jogar, consultar ranking, sincronizar pendências e sair. O tempo usa time.perf_counter(), excluindo menu e envio. Falhas de envio mantêm uma pendência local. O reenvio reutiliza o mesmo UUID e não deve criar outra partida.
 
----
+## Banco e permissões
 
-## ⚙️ Como Configurar e Executar
+Para um projeto novo, execute database.sql no SQL Editor do Supabase. O arquivo cria jogos, perguntas, partidas, a view ranking e as permissões, além das perguntas com fontes.
 
-### 1. Configurar o Supabase
-1. Acesse seu projeto no [Supabase Dashboard](https://supabase.com).
-2. Vá em **SQL Editor** > **New Query**.
-3. Copie todo o conteúdo do arquivo [`database.sql`](database.sql) e clique em **Run**.
-4. Em **Project Settings** > **API**, copie:
-   - **Project URL:** `https://mkgbeemjhvpvjmqbwtfl.supabase.co`
-   - **anon public key:** Chave pública configurada para este protótipo. Ver a pendência de permissões abaixo.
+Para atualizar o projeto existente, aplique somente os arquivos em supabase/migrations, em ordem. As migrações preservam os resultados existentes. A integração GitHub configurada em main pode aplicá-las automaticamente; a confirmação real de aplicação deve ser consultada em TESTES.md. Caso a integração falhe, execute os mesmos arquivos pelo SQL Editor.
 
-### 2. Executar o Jogo em Python (`jogo.py`)
-O código utiliza apenas a biblioteca padrão do Python (`urllib`, `json`, `time`, etc.), sem necessidade de `pip install`.
+A chave pública de config.js tem acesso somente à lista de jogos e à view ranking. As tabelas perguntas e partidas ficam bloqueadas para anon e authenticated. A view expõe somente os campos do ranking, usando o proprietário para ler os resultados. O acesso privado do Python usa a role service_role, por chave privada em um ambiente controlado. Não há autenticação dos jogadores: eles usam apenas apelidos.
 
-**Opção A — No Computador (Terminal ou PyCharm):**
-```bash
+Uma chave Secret ou service_role possui privilégios elevados. Ela não está no repositório, no notebook salvo nem no ZIP. Configure-a apenas no ambiente de execução ou nos Secrets do Colab. Não a use no site nem a compartilhe com o professor em arquivos. As instruções de instalação permitem que cada responsável configure seu próprio projeto.
+
+O ranking seleciona a melhor partida de cada apelido por jogo, ordenando por maior valor, menor tempo, data mais antiga e ID. Depois limita a dez jogadores. O site consulta o Supabase diretamente e funciona com o Python fechado.
+
+## Executar no Colab
+
+1. Abra o link Colab acima ou importe Jogar_no_Colab.ipynb.
+2. No seu Supabase, vá a Settings → API Keys. Use a Secret key; se houver somente chaves legadas, use service_role. Não copie essa chave para o chat ou para o JavaScript.
+3. No Colab, abra o ícone de chave e adicione um secret chamado SUPABASE_KEY. Cole a chave privada no valor e habilite o acesso do notebook a esse secret.
+4. Execute a primeira célula. Ela lê a chave sem exibi-la. Se Secrets não estiver disponível, solicita uma entrada oculta com getpass.
+5. Execute a segunda célula. Ela baixa jogo.py do repositório e abre o menu.
+6. Jogue usando um apelido de teste, atualize o site e capture o resultado da mesma partida nas duas telas. Não capture a tela dos Secrets.
+7. Saia pelo menu, execute novamente e consulte o ranking. Interrompa o Python e atualize o site para verificar a persistência e a independência do ranking.
+
+O notebook distribuído não contém células executadas ou credenciais. A execução real no Colab pela equipe ainda precisa ser confirmada em TESTES.md.
+
+## Executar no computador
+
+Requer Python 3 e acesso à internet. O jogo usa somente a biblioteca padrão; requirements.txt não exige pacotes externos.
+
+```sh
 python jogo.py
 ```
-Quando solicitado, informe a chave pública do Supabase (ou configure a variável de ambiente `SUPABASE_KEY`).
 
-**Opção B — No Google Colab:**
-Na primeira célula do Colab:
-```python
-import os
-os.environ["SUPABASE_URL"] = "https://mkgbeemjhvpvjmqbwtfl.supabase.co"
-os.environ["SUPABASE_KEY"] = "sua_chave_anon_aqui"
-```
-E na célula seguinte, execute o conteúdo de [`jogo.py`](jogo.py).
+Sem variável de ambiente, o jogo solicita a chave privada com entrada oculta. Também aceita SUPABASE_KEY, SUPABASE_SECRET_KEY ou SUPABASE_SERVICE_ROLE_KEY no ambiente; nunca coloque seus valores reais em arquivos da entrega. A URL pode ser alterada por SUPABASE_URL.
 
-### 3. Executar e Publicar o Site no GitHub Pages
-1. No arquivo [`config.js`](config.js), insira sua chave `anonKey` (ou insira diretamente pelo botão ⚙️ no site).
-2. No repositório do GitHub:
-   - Vá em **Settings** > **Pages**.
-   - Em **Build and deployment > Source**, selecione `Deploy from a branch`.
-   - Escolha a branch `main` (ou `master`) e a pasta `/ (root)`.
-   - Clique em **Save**. O site estará disponível em minutos!
+.env.example contém apenas nomes e valores de exemplo. Ele não é carregado automaticamente.
 
----
-
-## 📂 Arquivos do Repositório
-- [`jogo.py`](jogo.py): Código-fonte completo do jogo em Python.
-- [`requirements.txt`](requirements.txt): Documentação das dependências (bibliotecas nativas).
-- [`database.sql`](database.sql): Script SQL com tabelas, RLS, View de ranking e 18 perguntas revisadas.
-- [`index.html`](index.html), [`styles.css`](styles.css), [`app.js`](app.js), [`config.js`](config.js): Código do site de ranking web.
-- [`prompts.md`](prompts.md): Registro cronológico de todos os prompts de IA, testes e correções.
-- [`.env.example`](.env.example): Exemplo seguro de variáveis de ambiente sem segredos expostos.
-
-
-## Verificações reais e pendências
-
-Leia TESTES.md. Os testes locais exercitam entradas simuladas e não substituem a apresentação individual. A integração foi consultada no Supabase real; uma partida automática TESTE_AC04, com prêmio zero, foi enviada duas vezes com o mesmo UUID e permaneceu com um único registro. Seu tempo de 0,00s decorre da entrada automática e não representa uma partida humana.
-
-**Permissões pendentes:** a chave pública atual consegue consultar os gabaritos e inserir partidas. Isso contraria a exigência de acesso do site somente à leitura do ranking. A equipe optou por manter a configuração nesta revisão. O site só efetua consultas, mas isso não impede o uso da chave fora dele. Não apresentar a segurança como requisito concluído. A correção requer separar o acesso de escrita/leitura de perguntas do Python do acesso público ao ranking, com orientação do professor. Nunca colocar chave administrativa no frontend ou no ZIP.
-
-**Histórico de IA pendente:** os prompts reais anteriores a este chat não foram recuperados. prompts.md distingue a transcrição disponível de exemplos simulados e não garante a completude do histórico do projeto.
-
-**Evidências:** os registros automatizados estão em evidencias/. Há capturas reais da mesma partida na janela opcional Python e no site, conforme TESTES.md. A janela Tkinter chama as funções reais de jogo.py; não é uma captura do terminal.
-
-## Rodar os testes locais
-
-Na raiz do projeto, com Python 3 instalado:
+## Testes e evidências
 
 ```sh
 python -m unittest discover -s tests -p "test_*.py" -v
-```
-
-O teste JavaScript usa Node.js, opcional para validar o site:
-
-```sh
 node tests/testar_site.cjs
 ```
 
-Os testes automatizados usam entradas e rede simuladas, exceto o teste de integração identificado em TESTES.md. Eles não inserem partidas ao rodar a suíte local.
+Node.js é necessário somente para os testes JavaScript, não para jogar ou abrir o site. TESTES.md registra resultados observados e limites. COMPARACAO_ENUNCIADO.md compara os requisitos do documento do professor. REVISAO_PERGUNTAS.md contém fontes e justificativas dos gabaritos.
 
-## Configuração local
+evidencias/ contém capturas reais da mesma partida e os respectivos dados. A captura Python anterior foi obtida na janela opcional tests/demonstracao_gui.py, que executa as funções de jogo.py; não é uma captura do terminal ou do Colab. Essa janela agora também requer a chave privada no ambiente. O teste no Colab deverá produzir evidências da execução atual após a alteração de permissões.
 
-O arquivo .env.example é um modelo e não é carregado automaticamente. No PowerShell, defina as variáveis da sessão antes de executar o jogo:
+## Registro de IA e apresentação
 
-```powershell
-$env:SUPABASE_URL = "https://SEU-PROJETO.supabase.co"
-$env:SUPABASE_KEY = "SUA_CHAVE_DE_CLIENTE_PERMITIDA"
-python jogo.py
-```
+prompts.md reúne reconstruções identificadas e pedidos reais disponíveis deste chat. Reconstruções não comprovam um histórico original completo; essa limitação permanece declarada. Não há credenciais privadas nos prompts.
 
-Alternativamente, informe a chave pública quando o jogo solicitar. Nunca compartilhe uma chave privada na gravação ou na apresentação.
+EXPLICACAO.md ajuda a estudar as funções. Cada integrante deve explicar e modificar código Python na avaliação individual; os testes automatizados não comprovam esse domínio.
 
-## Apresentação individual
+## Entrega
 
-Cada integrante precisa conseguir explicar e modificar uma função. Estudem calcular_premio e os índices da lista, sortear_perguntas e random.sample, jogar e suas condições de parada, além de salvar_partida e a reutilização do UUID. A avaliação de domínio individual depende da apresentação e não pode ser comprovada por estes testes.
+O ZIP deve conter a mesma versão publicada no repositório, incluindo código Python, requirements.txt, código do site, SQL, perguntas com gabaritos e fontes, prompts.md, README, testes e evidências. O arquivo MOODLE.txt contém o texto de identificação e links. Confirme a composição da equipe e o nome do arquivo com o professor, porque o enunciado prevê dois integrantes.
 
-
-## Demonstração gráfica opcional
-
-Execute python tests/demonstracao_gui.py para abrir uma janela Tkinter que usa as funções do jogo, consulta as perguntas reais e registra uma partida com o apelido EVIDENCIA_AC04. Usa a chave pública de config.js e registra dados reais no Supabase. Para o trabalho principal, use python jogo.py no terminal. O guia EXPLICACAO.md ajuda a preparar a apresentação individual.
-
+Os links não substituem o ZIP. O envio e a confirmação final no Moodle são realizados pela equipe.

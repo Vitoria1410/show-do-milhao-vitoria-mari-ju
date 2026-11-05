@@ -1,0 +1,7 @@
+project_id = "show-do-milhao-vitoria-mari-ju"
+
+[db]
+major_version = 17
+
+[db.seed]
+enabled = false

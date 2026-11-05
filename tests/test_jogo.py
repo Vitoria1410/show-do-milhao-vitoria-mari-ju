@@ -57,5 +57,30 @@ class Testes(unittest.TestCase):
             self.assertEqual(req.call_args.args[2],{'on_conflict':'id'})
             self.assertIn('ignore-duplicates',req.call_args.args[4])
 
-if __name__=='__main__': unittest.main(verbosity=2)
+class TestesCredenciais(unittest.TestCase):
+    def obter_cabecalho(self, chave):
+        from unittest.mock import MagicMock
+        with patch.dict('os.environ', SUPABASE_KEY=chave): db=j.Supabase()
+        resposta=MagicMock()
+        resposta.__enter__.return_value.read.return_value=b'[]'
+        with patch.object(j,'urlopen',return_value=resposta) as abrir:
+            db.requisicao('GET','jogos')
+            return dict(abrir.call_args.args[0].header_items())
+    def test_chave_moderna_sem_bearer(self):
+        headers=self.obter_cabecalho('sb_secret_chave_de_teste')
+        self.assertEqual(headers.get('Apikey'),'sb_secret_chave_de_teste')
+        self.assertNotIn('Authorization',headers)
+    def test_chave_legada_com_bearer(self):
+        headers=self.obter_cabecalho('token-legado-de-teste')
+        self.assertEqual(headers.get('Authorization'),'Bearer token-legado-de-teste')
+    def test_erro_nao_exibe_chave(self):
+        from urllib.error import HTTPError
+        chave='sb_secret_valor_ficticio_teste'
+        with patch.dict('os.environ',SUPABASE_KEY=chave): db=j.Supabase()
+        erro=HTTPError('https://example.com',403,'Forbidden',{},io.BytesIO(chave.encode()))
+        with patch.object(j,'urlopen',side_effect=erro):
+            with self.assertRaises(RuntimeError) as contexto: db.requisicao('GET','perguntas')
+        self.assertNotIn(chave,str(contexto.exception))
+        self.assertIn('[chave ocultada]',str(contexto.exception))
 
+if __name__=='__main__': unittest.main(verbosity=2)

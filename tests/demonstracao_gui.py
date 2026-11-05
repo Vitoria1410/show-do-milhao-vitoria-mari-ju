@@ -2,7 +2,7 @@
 
 O jogo principal continua sendo `python jogo.py`, no terminal.
 Esta janela usa tkinter (biblioteca padrão) para registrar uma evidência visual.
-Não incorpora nenhuma chave privada; utiliza a chave pública de config.js.
+Não incorpora credenciais; configure SUPABASE_KEY no ambiente de execução.
 """
 import importlib.util
 import io
@@ -40,8 +40,7 @@ def ler(prompt=''):
 
 def executar():
     try:
-        config = (BASE / 'config.js').read_text(encoding='utf-8')
-        os.environ['SUPABASE_KEY'] = re.search(r'anonKey:\s*"([^"]+)"', config).group(1)
+        # Configure a chave privada no ambiente; nunca no código.
         with redirect_stdout(Saida()), patch('builtins.input', side_effect=ler):
             print('DEMONSTRAÇÃO REAL — funções de jogo.py em janela Tkinter')
             print('Partida de teste identificada pelo apelido EVIDENCIA_AC04.')

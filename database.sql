@@ -98,39 +98,28 @@ SELECT
     ) AS posicao
 FROM partidas_filtradas;
 
--- 5. PERMISSÕES DE ACESSO (Para o site no GitHub Pages e o script Python)
--- Habilita RLS se desejar, ou garante permissões diretas para 'anon' e 'authenticated'
+-- 5. PERMISSÕES: navegador somente lê jogos e ranking.
 ALTER TABLE public.jogos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.perguntas ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.partidas ENABLE ROW LEVEL SECURITY;
 
--- Políticas de segurança:
--- Qualquer um pode consultar jogos
 DROP POLICY IF EXISTS "Leitura pública de jogos" ON public.jogos;
-CREATE POLICY "Leitura pública de jogos" ON public.jogos FOR SELECT USING (true);
-
--- Permite cadastrar novo jogo se necessário
+CREATE POLICY "Leitura pública de jogos" ON public.jogos FOR SELECT TO anon, authenticated USING (true);
 DROP POLICY IF EXISTS "Inserção pública de jogos" ON public.jogos;
-CREATE POLICY "Inserção pública de jogos" ON public.jogos FOR INSERT WITH CHECK (true);
-
--- Qualquer um pode consultar perguntas (mas não ver campos restritos se houvesse)
 DROP POLICY IF EXISTS "Leitura pública de perguntas" ON public.perguntas;
-CREATE POLICY "Leitura pública de perguntas" ON public.perguntas FOR SELECT USING (true);
-
--- Qualquer um pode inserir partidas
 DROP POLICY IF EXISTS "Inserção pública de partidas" ON public.partidas;
-CREATE POLICY "Inserção pública de partidas" ON public.partidas FOR INSERT WITH CHECK (true);
-
--- Qualquer um pode ler partidas
 DROP POLICY IF EXISTS "Leitura pública de partidas" ON public.partidas;
-CREATE POLICY "Leitura pública de partidas" ON public.partidas FOR SELECT USING (true);
 
--- Garantir privilégios para o role anon
-GRANT USAGE ON SCHEMA public TO anon, authenticated;
-GRANT SELECT, INSERT ON public.jogos TO anon, authenticated;
-GRANT SELECT ON public.perguntas TO anon, authenticated;
-GRANT SELECT, INSERT ON public.partidas TO anon, authenticated;
-GRANT SELECT ON public.ranking TO anon, authenticated;
+REVOKE ALL ON TABLE public.perguntas, public.partidas, public.jogos FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON TABLE public.ranking FROM PUBLIC, anon, authenticated;
+GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
+GRANT SELECT ON public.jogos, public.ranking TO anon, authenticated;
+-- A view deliberadamente expõe só campos do ranking, usando o proprietário.
+ALTER VIEW public.ranking SET (security_invoker = false);
+-- Credencial privada usada somente na execução controlada do Python/Colab.
+GRANT SELECT ON public.perguntas TO service_role;
+GRANT SELECT, INSERT ON public.jogos, public.partidas TO service_role;
+GRANT USAGE, SELECT ON SEQUENCE public.jogos_id_seq TO service_role;
 
 -- ====================================================================
 -- 6. DADOS INICIAIS: JOGO PADRÃO
@@ -145,8 +134,8 @@ ON CONFLICT (nome) DO NOTHING;
 -- Todas com 4 alternativas, uma única correta e fontes documentadas
 -- ====================================================================
 
--- Limpar perguntas anteriores para evitar duplicações caso reexecute
-DELETE FROM public.perguntas;
+-- Evita duplicar perguntas ao executar novamente; não apaga dados.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_perguntas_enunciado ON public.perguntas (enunciado);
 
 -- --- PERGUNTAS FÁCEIS (1 a 6) ---
 
@@ -159,7 +148,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'write()',
     'B',
     'facil',
-    'Documentação Oficial Python (python.org)'
+    'https://docs.python.org/3/library/functions.html#print'
 ),
 (
     'Qual símbolo é utilizado para iniciar um comentário de linha única em Python?',
@@ -169,7 +158,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     '/*',
     'C',
     'facil',
-    'Documentação Oficial Python (python.org)'
+    'https://docs.python.org/3/reference/lexical_analysis.html#comments'
 ),
 (
     'Qual tipo de dado é retornado pela expressão 5 > 2 em Python?',
@@ -179,7 +168,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'float',
     'C',
     'facil',
-    'Documentação Oficial Python (python.org)'
+    'https://docs.python.org/3/library/stdtypes.html#comparisons'
 ),
 (
     'O que significa a sigla IA no contexto da tecnologia moderna?',
@@ -189,7 +178,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'Informação Algorítmica',
     'B',
     'facil',
-    'Russell & Norvig - Inteligência Artificial: Uma Abordagem Moderna'
+    'https://aima.cs.berkeley.edu/'
 ),
 (
     'Qual palavra-chave é usada em Python para declarar uma função?',
@@ -199,7 +188,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'def',
     'D',
     'facil',
-    'Documentação Oficial Python (python.org)'
+    'https://docs.python.org/3/reference/compound_stmts.html#function-definitions'
 ),
 (
     'Em Python, qual estrutura de dados é ordenada, mutável e delimitada por colchetes [ ]?',
@@ -209,8 +198,9 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'Conjunto (set)',
     'A',
     'facil',
-    'Documentação Oficial Python (python.org)'
-);
+    'https://docs.python.org/3/tutorial/datastructures.html'
+)
+ON CONFLICT (enunciado) DO NOTHING;
 
 -- --- PERGUNTAS MÉDIAS (7 a 12) ---
 
@@ -223,7 +213,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'A lista não permite elementos duplicados',
     'B',
     'media',
-    'Documentação Oficial Python (python.org)'
+    'https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range'
 ),
 (
     'Qual biblioteca em Python é amplamente utilizada para manipulação e análise de dados em tabelas (DataFrames)?',
@@ -233,7 +223,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'Tkinter',
     'A',
     'media',
-    'Pandas Documentation (pandas.pydata.org)'
+    'https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html'
 ),
 (
     'No aprendizado de máquina supervisionado, qual é o papel do conjunto de dados de treino?',
@@ -243,7 +233,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'Limpar arquivos temporários do sistema operacional',
     'B',
     'media',
-    'Goodfellow, Bengio & Courville - Deep Learning'
+    'https://developers.google.com/machine-learning/intro-to-ml/supervised'
 ),
 (
     'Qual método de dicionário em Python retorna o valor de uma chave sem disparar KeyError se ela não existir?',
@@ -253,7 +243,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'dict.find()',
     'C',
     'media',
-    'Documentação Oficial Python (python.org)'
+    'https://docs.python.org/3/library/stdtypes.html#dict.get'
 ),
 (
     'O que é o fenômeno de Overfitting (sobreajuste) em modelos de Machine Learning?',
@@ -263,7 +253,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'Quando o banco de dados fica sem espaço em disco',
     'A',
     'media',
-    'Mitchell, Tom - Machine Learning (McGraw-Hill)'
+    'https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html'
 ),
 (
     'Qual bloco é utilizado em Python para capturar e tratar exceções durante a execução?',
@@ -273,21 +263,22 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'check ... handle',
     'B',
     'media',
-    'Documentação Oficial Python (python.org)'
-);
+    'https://docs.python.org/3/reference/compound_stmts.html#the-try-statement'
+)
+ON CONFLICT (enunciado) DO NOTHING;
 
 -- --- PERGUNTAS DIFÍCEIS (13 a 18) ---
 
 INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternativa_c, alternativa_d, correta, dificuldade, fonte) VALUES
 (
-    'Qual mecanismo arquitetural introduzido no artigo "Attention Is All You Need" (2017) revolucionou os modelos de linguagem (LLMs)?',
+    'Qual arquitetura apresentada no artigo "Attention Is All You Need" (2017) é baseada em mecanismos de atenção?',
     'Redes Convolucionais 3D',
-    'Mecanismo de Autoatenção (Self-Attention / Transformers)',
+    'Transformer',
     'Algoritmo Genético Recorrente',
     'Máquinas de Vetores de Suporte com Kernel RBF',
     'B',
     'dificil',
-    'Vaswani et al. - Attention Is All You Need (NeurIPS 2017)'
+    'https://arxiv.org/abs/1706.03762'
 ),
 (
     'Em Python, o que caracteriza uma função geradora (generator function)?',
@@ -297,17 +288,17 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'Não pode receber argumentos',
     'A',
     'dificil',
-    'PEP 255 -- Simple Generators (python.org)'
+    'https://peps.python.org/pep-0255/'
 ),
 (
-    'Qual é o impacto do GIL (Global Interpreter Lock) no interpretador CPython padrão?',
+    'Em uma compilação de CPython com GIL habilitado, qual é o efeito do Global Interpreter Lock?',
     'Impede que scripts Python usem conexões de rede',
     'Garante que apenas uma thread execute bytecode Python por vez em um processo',
     'Limita o uso de memória a no máximo 4 GB',
     'Obriga todas as variáveis a terem tipagem estática',
     'B',
     'dificil',
-    'CPython Internals / Python Wiki (wiki.python.org/moin/GlobalInterpreterLock)'
+    'https://docs.python.org/3/glossary.html#term-global-interpreter-lock'
 ),
 (
     'No treinamento de redes neurais profundas, qual problema ocorre quando os gradientes diminuem exponencialmente nas camadas iniciais?',
@@ -317,7 +308,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'Convergência estocástica nula',
     'B',
     'dificil',
-    'Goodfellow, Bengio & Courville - Deep Learning (MIT Press)'
+    'https://www.deeplearningbook.org/contents/rnn.html'
 ),
 (
     'Qual é a complexidade média de tempo para verificar se uma chave existe em um dicionário (dict) em Python?',
@@ -327,7 +318,7 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'O(n²)',
     'C',
     'dificil',
-    'Python TimeComplexity Wiki (wiki.python.org/moin/TimeComplexity)'
+    'https://wiki.python.org/python/language/TimeComplexity.html'
 ),
 (
     'Qual técnica é usada para enriquecer o contexto de um LLM com dados externos recuperados de um banco vetorial antes de gerar a resposta?',
@@ -337,5 +328,6 @@ INSERT INTO public.perguntas (enunciado, alternativa_a, alternativa_b, alternati
     'BERT Fine-Tuning sem contexto',
     'A',
     'dificil',
-    'Lewis et al. - Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (2020)'
-);
+    'https://arxiv.org/abs/2005.11401'
+)
+ON CONFLICT (enunciado) DO NOTHING;

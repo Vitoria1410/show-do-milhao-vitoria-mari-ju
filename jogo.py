@@ -12,6 +12,7 @@ Recursos implementados (consulte TESTES.md para pendências):
 """
 
 import json
+from getpass import getpass
 import os
 import random
 import time
@@ -53,12 +54,12 @@ class Supabase:
     def __init__(self):
         # Permite carregar das variáveis de ambiente ou usar o ID padrão do projeto
         self.url = os.getenv("SUPABASE_URL", "https://mkgbeemjhvpvjmqbwtfl.supabase.co").strip().rstrip("/")
-        self.key = os.getenv("SUPABASE_KEY", "").strip()
+        self.key = (os.getenv("SUPABASE_KEY") or os.getenv("SUPABASE_SECRET_KEY") or os.getenv("SUPABASE_SERVICE_ROLE_KEY") or "").strip()
 
         if not self.url or not self.key:
             raise ValueError(
                 "Configure a chave do Supabase!\n"
-                "Defina a variável SUPABASE_KEY com a chave pública permitida pelas políticas do protótipo do seu projeto."
+                "Defina SUPABASE_KEY no ambiente ou nos Secrets do Colab com a chave privada de execução. Não a inclua no código."
             )
 
         if not self.url.startswith("https://"):
@@ -79,10 +80,13 @@ class Supabase:
 
         cabecalhos = {
             "apikey": self.key,
-            "Authorization": f"Bearer {self.key}",
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
+
+        # Chaves modernas sb_secret/sb_publishable usam somente apikey.
+        if not self.key.startswith(("sb_secret_", "sb_publishable_")):
+            cabecalhos["Authorization"] = f"Bearer {self.key}"
 
         if preferencia:
             cabecalhos["Prefer"] = preferencia
@@ -107,7 +111,7 @@ class Supabase:
                 return None
 
         except HTTPError as erro:
-            detalhe = erro.read().decode("utf-8", errors="replace")
+            detalhe = erro.read().decode("utf-8", errors="replace").replace(self.key, "[chave ocultada]")
             raise RuntimeError(f"Erro HTTP {erro.code}: {detalhe}")
 
         except (URLError, TimeoutError, OSError) as erro:
@@ -169,16 +173,11 @@ class Supabase:
         )
 
     def buscar_ranking(self, jogo_id):
+        # A view aplica a melhor partida por apelido antes de limitar ao top 10.
         return self.requisicao(
-            "GET",
-            "partidas",
-            {
-                "select": (
-                    "id,jogo_id,apelido,valor_ganho,"
-                    "tempo_segundos,acertos,data_hora"
-                ),
-                "jogo_id": f"eq.{jogo_id}"
-            }
+            "GET", "ranking",
+            {"select": "id:partida_id,jogo_id,apelido,valor_ganho,tempo_segundos,data_hora",
+             "jogo_id": f"eq.{jogo_id}", "order": "posicao.asc", "limit": "10"}
         ) or []
 
 
@@ -478,8 +477,8 @@ def main():
     print("=" * 55)
 
     # Permite informar a chave caso não esteja em variável de ambiente
-    if not os.getenv("SUPABASE_KEY"):
-        chave = input("Digite a chave pública do Supabase: ").strip()
+    if not any(os.getenv(nome) for nome in ("SUPABASE_KEY", "SUPABASE_SECRET_KEY", "SUPABASE_SERVICE_ROLE_KEY")):
+        chave = getpass("Chave privada de execução do Supabase (entrada oculta): ").strip()
         if chave:
             os.environ["SUPABASE_KEY"] = chave
 

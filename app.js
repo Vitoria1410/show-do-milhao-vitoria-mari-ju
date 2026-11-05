@@ -40,11 +40,18 @@ function getSupabaseConfig() {
 
 // Configuração de cabeçalhos da requisição Supabase
 function getHeaders(anonKey) {
-  return {
+  if (anonKey.startsWith('sb_secret_')) throw new Error('Use somente a chave pública no site.');
+  if (anonKey.split('.').length === 3) {
+    let role;
+    try { role = JSON.parse(atob(anonKey.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).role; } catch {}
+    if (role === 'service_role') throw new Error('Uma chave administrativa não pode ser usada no site.');
+  }
+  const headers = {
     'apikey': anonKey,
-    'Authorization': `Bearer ${anonKey}`,
     'Accept': 'application/json'
   };
+  if (!anonKey.startsWith('sb_publishable_')) headers.Authorization = `Bearer ${anonKey}`;
+  return headers;
 }
 
 // Alternar exibição do painel de configuração de chave
@@ -63,6 +70,7 @@ if (btnSaveKey && inputAnonKey) {
       alert('Por favor, informe a chave anon pública do Supabase.');
       return;
     }
+    try { getHeaders(key); } catch (error) { alert(error.message); return; }
     localStorage.setItem('supabase_anon_key', key);
     alert('Chave salva com sucesso!');
     configPanel.classList.add('hidden');
@@ -130,47 +138,10 @@ async function loadGames() {
   }
 }
 
-// Ordenação e desempate no cliente (usado caso a view ranking ainda não tenha sido criada no banco)
-function processRankingClientSide(partidas, nomeJogo) {
-  // Ordenação: 1º Maior valor -> 2º Menor tempo -> 3º Data mais antiga -> 4º ID
-  partidas.sort((a, b) => {
-    if (Number(b.valor_ganho) !== Number(a.valor_ganho)) {
-      return Number(b.valor_ganho) - Number(a.valor_ganho);
-    }
-    if (Number(a.tempo_segundos) !== Number(b.tempo_segundos)) {
-      return Number(a.tempo_segundos) - Number(b.tempo_segundos);
-    }
-    if (a.data_hora !== b.data_hora) {
-      return a.data_hora.localeCompare(b.data_hora);
-    }
-    return String(a.id).localeCompare(String(b.id));
-  });
-
-  // Filtrar melhor partida de cada apelido (sem repetição de apelido)
-  const melhores = new Map();
-  for (const p of partidas) {
-    const apelidoChave = (p.apelido || '').trim().toLowerCase();
-    if (!melhores.has(apelidoChave)) {
-      melhores.set(apelidoChave, p);
-    }
-  }
-
-  // Pegar os 10 primeiros e atribuir posição
-  return Array.from(melhores.values()).slice(0, 10).map((item, index) => ({
-    posicao: index + 1,
-    nome_jogo: nomeJogo,
-    apelido: item.apelido,
-    valor_ganho: item.valor_ganho,
-    tempo_segundos: item.tempo_segundos,
-    data_hora: item.data_hora
-  }));
-}
-
 // Carregar o ranking oficial para o jogo selecionado
 async function loadRanking() {
   const { url, anonKey } = getSupabaseConfig();
   const selectedGameId = gameFilter.value;
-  const selectedGameName = gameFilter.options[gameFilter.selectedIndex]?.text || '';
 
   if (!anonKey) {
     status.innerHTML = '⚠️ Informe a chave pública do Supabase em <strong>⚙️ Chave Supabase</strong> para consultar os dados.';
@@ -188,24 +159,10 @@ async function loadRanking() {
   status.textContent = 'Consultando o ranking no Supabase...';
 
   try {
-    // 1. Tenta consultar diretamente da View 'ranking'
-    const viewUrl = `${url}/rest/v1/ranking?jogo_id=eq.${selectedGameId}&select=posicao,nome_jogo,apelido,valor_ganho,tempo_segundos,data_hora&order=posicao.asc&limit=10`;
-    let response = await fetch(viewUrl, { headers: getHeaders(anonKey) });
-    let items = [];
-
-    if (response.ok) {
-      items = await response.json();
-    } else {
-      // 2. Se a view não existir ou der erro, consulta a tabela 'partidas' com fallback inteligente
-      console.warn('View ranking não respondeu, usando fallback na tabela partidas.');
-      const partidasUrl = `${url}/rest/v1/partidas?jogo_id=eq.${selectedGameId}&select=id,jogo_id,apelido,valor_ganho,tempo_segundos,data_hora`;
-      const fallbackResponse = await fetch(partidasUrl, { headers: getHeaders(anonKey) });
-      if (!fallbackResponse.ok) {
-        throw new Error(`Falha HTTP ${fallbackResponse.status}: ${await fallbackResponse.text()}`);
-      }
-      const rawPartidas = await fallbackResponse.json();
-      items = processRankingClientSide(rawPartidas, selectedGameName);
-    }
+    const viewUrl = `${url}/rest/v1/ranking?jogo_id=eq.${encodeURIComponent(selectedGameId)}&select=posicao,nome_jogo,apelido,valor_ganho,tempo_segundos,data_hora&order=posicao.asc&limit=10`;
+    const response = await fetch(viewUrl, { headers: getHeaders(anonKey) });
+    if (!response.ok) throw new Error(`Falha HTTP ${response.status}`);
+    const items = await response.json();
 
     if (!items.length) {
       status.textContent = 'Ainda não há partidas registradas para este jogo.';
