@@ -27,7 +27,7 @@ Referência: documento AC04_Show_Milhão_v1.docx fornecido pela solicitante, rel
 | Informar falta de perguntas e falha de conexão | validar_perguntas e tratamento de erros | Testes locais aprovados |
 | Nunca confirmar envio malsucedido; guardar resultado e oferecer reenvio | salvar_pendente, sincronizar_pendentes e mensagem após sucesso | Testes locais aprovados; reenvio anterior confirmado online |
 | Persistir e reabrir para consultar | banco Supabase, leitura do ranking | Leitura posterior confirmada; reabertura no Colab pela equipe pendente |
-| Separar acesso público do acesso de escrita/gabarito | migrações e chave privada somente no ambiente do Python | Verificação online atual registrada em TESTES.md |
+| Separar acesso público do acesso de escrita/gabarito | migrações e chave privada somente no ambiente do Python | Chave pública bloqueada em seis operações; leitura de jogos/ranking preservada; envio privado no Colab pendente |
 
 ## Ranking web — critério de 1,0 ponto
 
@@ -38,9 +38,9 @@ Referência: documento AC04_Show_Milhão_v1.docx fornecido pela solicitante, rel
 | Filtro por jogo, botão de atualização, top 10 | loadGames, loadRanking e limit=10 | Testes locais e revisão anterior no navegador |
 | Ranking por jogo; melhor partida por apelido | view ranking, duas etapas de ROW_NUMBER | Conferido no SQL |
 | Desempates por prêmio, tempo, data e ID | ORDER BY explícito nas duas etapas da view | SQL conferido; dados de teste aprovados em Python |
-| Consultar online; mensagens de vazio ou erro | fetch na API; sem fallback para tabela bruta | Testes locais aprovados; nova verificação online em TESTES.md |
+| Consultar online; mensagens de vazio ou erro | fetch na API; sem fallback para tabela bruta | Testes locais aprovados; API atual confirmada online e build do Pages concluído; nova captura pelo usuário pendente |
 | Funcionar com Python fechado | site estático consulta Supabase | Confirmado na revisão anterior; preservar na revisão atual |
-| Site somente leitura, sem gabarito ou edição | SELECT apenas em jogos/ranking para chave pública; perguntas/partidas bloqueadas | Implantação atual deve ser confirmada pelas consultas em TESTES.md |
+| Site somente leitura, sem gabarito ou edição | SELECT apenas em jogos/ranking para chave pública; perguntas/partidas bloqueadas | Confirmado online: jogos/ranking HTTP 200; perguntas e leitura/escrita de partidas negadas |
 
 ## Organização e entrega — critério de 1,0 ponto
 

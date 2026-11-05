@@ -29,4 +29,4 @@ No site, `loadGames()` busca a lista de jogos. `loadRanking()` busca as dez prim
 5. Explicar por que o UUID precisa ser o mesmo no reenvio.
 6. Comparar dois jogadores empatados em prêmio e identificar o vencedor pelo tempo.
 
-Não decorar uma afirmação falsa de conformidade: as permissões atuais expõem gabaritos pela chave pública, o histórico antigo de prompts está indisponível e a equipe informada tem três integrantes. Esses pontos constam em TESTES.md.
+As permissões públicas foram corrigidas: o navegador lê apenas jogos e ranking. O Python usa uma credencial privada de execução, configurada no ambiente ou nos Secrets do Colab, sem autenticar o jogador. A confirmação de uma partida privada no Colab cabe à equipe. Reconstruções de prompts não comprovam o histórico original completo, e a composição de três integrantes deve ser confirmada com o professor. Consulte TESTES.md e COMPARACAO_ENUNCIADO.md.

@@ -4,7 +4,8 @@ Data: 04/11/2026 (America/Sao_Paulo). Executor: Codex, a pedido da equipe.
 
 ## Testes locais
 
-- 15 testes Python aprovados: regras, prêmios, sorteio, entradas, encerramento, ranking, pendências, idempotência, cabeçalhos de chaves modernas/legadas e ocultação de credenciais em erro.
+- 18 testes Python aprovados: regras, prêmios, sorteio, entradas, encerramento, ranking, pendências, idempotência, cabeçalhos de chaves modernas/legadas e ocultação de credenciais em erro.
+- Três dos 18 testes Python executam a consulta SQL real da view em SQLite em memória: separação por jogo e melhor apelido, desempates e top 10 após classificar mais de mil partidas. Esses testes validam a lógica SQL comum e não substituem a verificação das permissões no PostgreSQL.
 - 9 testes JavaScript aprovados: formatação, renderização como texto, estado vazio, rede indisponível, filtro/top 10, erro ao listar jogos, ausência de consulta à tabela bruta, cabeçalho moderno e rejeição de chaves administrativas no site.
 - Exemplos Python das perguntas revisadas executados com sucesso; fontes e justificativas das 18 perguntas estão em REVISAO_PERGUNTAS.md.
 - Notebook Colab validado estruturalmente, sem saídas nem credenciais. Execução pela equipe no Colab ainda não confirmada.
@@ -20,7 +21,24 @@ Data: 04/11/2026 (America/Sao_Paulo). Executor: Codex, a pedido da equipe.
 
 ## Verificação online desta revisão
 
-A migração ainda precisa ser confirmada online. O resultado das consultas com a chave pública será acrescentado após a implantação.
+A integração Supabase no GitHub concluiu com status success para o commit 8bb2cbafc3f7fd1139b0a8638f9061356f7d4ddb. O GitHub Pages também concluiu o build dessa versão. Os testes reais com a chave pública retornaram:
+
+| Operação | Esperado | Observado |
+|---|---|---|
+| Ler jogos | Permitido | HTTP 200 |
+| Ler ranking do jogo 1 | Permitido | HTTP 200, resultados existentes preservados |
+| Ler perguntas e gabaritos | Negado | HTTP 401, permission denied for table perguntas |
+| Ler tabela bruta de partidas | Negado | HTTP 401, permission denied for table partidas |
+| Inserir partida | Negado | HTTP 401, permission denied for table partidas |
+| Inserir jogo | Negado | HTTP 401, permission denied for table jogos |
+| Alterar partida | Negado | HTTP 401, permission denied for table partidas |
+| Excluir partida | Negado | HTTP 401, permission denied for table partidas |
+
+As tentativas de inserir usaram corpo vazio. As tentativas de alterar/excluir usaram um UUID inexistente, sem tocar resultados reais. Os oito testes passaram. Evidência: evidencias/permissoes_publicas.json. HTTP 401 e 403 são aceitos como bloqueio; neste projeto o PostgREST retornou 401 com mensagem explícita de falta de permissão.
+
+O envio usando a chave privada não foi executado pelo assistente nesta revisão, porque nenhuma credencial privada foi recebida. A equipe fará a confirmação no Colab. Os testes locais validaram a composição dos cabeçalhos e o fluxo de salvamento com credenciais fictícias, sem atribuir a isso uma gravação privada real.
+
+A ferramenta de controle do navegador foi interrompida porque não conseguiu determinar a URL atual no Windows com confiança suficiente para aplicar sua política. Nenhuma nova interação visual foi tentada depois desse bloqueio. A atualização foi verificada por consultas HTTP e build do Pages; a nova captura visual ficará a cargo da execução da equipe. As capturas anteriores permanecem identificadas como históricas.
 
 ## Evidências históricas reais
 

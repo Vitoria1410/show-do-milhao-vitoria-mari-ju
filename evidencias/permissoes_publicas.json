@@ -1,0 +1,104 @@
+[
+  {
+    "metodo": "GET",
+    "recurso": "jogos?select=id,nome",
+    "esperado": 200,
+    "observado": 200,
+    "passou": true,
+    "detalhes": [
+      {
+        "id": 1,
+        "nome": "Show do Milhão - Python e IA"
+      }
+    ]
+  },
+  {
+    "metodo": "GET",
+    "recurso": "ranking?select=posicao,nome_jogo,apelido,valor_ganho,tempo_segundos,data_hora&jogo_id=eq.1&order=posicao.asc&limit=10",
+    "esperado": 200,
+    "observado": 200,
+    "passou": true,
+    "detalhes": [
+      {
+        "posicao": 1,
+        "nome_jogo": "Show do Milhão - Python e IA",
+        "apelido": "Mari",
+        "valor_ganho": 1000000,
+        "tempo_segundos": 45.2,
+        "data_hora": "2026-11-04T18:38:11.173793+00:00"
+      },
+      {
+        "posicao": 2,
+        "nome_jogo": "Show do Milhão - Python e IA",
+        "apelido": "Vitoria",
+        "valor_ganho": 500000,
+        "tempo_segundos": 30.5,
+        "data_hora": "2026-11-04T19:13:25.773996+00:00"
+      },
+      {
+        "posicao": 3,
+        "nome_jogo": "Show do Milhão - Python e IA",
+        "apelido": "TESTE_AC04",
+        "valor_ganho": 0,
+        "tempo_segundos": 0.0,
+        "data_hora": "2026-11-05T00:14:55.833404+00:00"
+      },
+      {
+        "posicao": 4,
+        "nome_jogo": "Show do Milhão - Python e IA",
+        "apelido": "EVIDENCIA_AC04",
+        "valor_ganho": 0,
+        "tempo_segundos": 47.07,
+        "data_hora": "2026-11-05T00:24:12.631317+00:00"
+      }
+    ]
+  },
+  {
+    "metodo": "GET",
+    "recurso": "perguntas?select=id,correta&limit=1",
+    "esperado": 403,
+    "observado": 401,
+    "passou": true,
+    "detalhes": "permission denied for table perguntas"
+  },
+  {
+    "metodo": "GET",
+    "recurso": "partidas?select=id&limit=1",
+    "esperado": 403,
+    "observado": 401,
+    "passou": true,
+    "detalhes": "permission denied for table partidas"
+  },
+  {
+    "metodo": "POST",
+    "recurso": "partidas",
+    "esperado": 403,
+    "observado": 401,
+    "passou": true,
+    "detalhes": "permission denied for table partidas"
+  },
+  {
+    "metodo": "POST",
+    "recurso": "jogos",
+    "esperado": 403,
+    "observado": 401,
+    "passou": true,
+    "detalhes": "permission denied for table jogos"
+  },
+  {
+    "metodo": "PATCH",
+    "recurso": "partidas?id=eq.00000000-0000-0000-0000-000000000000",
+    "esperado": 403,
+    "observado": 401,
+    "passou": true,
+    "detalhes": "permission denied for table partidas"
+  },
+  {
+    "metodo": "DELETE",
+    "recurso": "partidas?id=eq.00000000-0000-0000-0000-000000000000",
+    "esperado": 403,
+    "observado": 401,
+    "passou": true,
+    "detalhes": "permission denied for table partidas"
+  }
+]

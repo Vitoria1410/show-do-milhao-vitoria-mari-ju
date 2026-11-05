@@ -182,7 +182,7 @@ Esta seção é distinta dos prompts reconstruídos. Refere-se à revisão efeti
 1. **Publicação:** o GitHub Pages estava desativado e o link retornava 404. Foi ativado; a página foi aberta e atualizada com consulta real ao Supabase.
 2. **Aviso de falha do site:** a falha ao listar jogos não atualizava o aviso principal. Foi acrescentada uma mensagem e o botão Atualizar passou a tentar carregar a lista novamente quando necessário. O teste JavaScript correspondente passou.
 3. **Documentação de prêmios:** um relato antigo de exemplo indicava R$ 25.000,00 para desistência na quarta pergunta após três acertos. O valor correto é R$ 10.000,00. O teste da regra confirmou esse valor.
-4. **Permissões:** a chave pública conseguiu consultar gabaritos e inserir partidas. A solicitante optou por manter a configuração atual e registrar a pendência. Não foi aplicada uma correção de permissões, e o exemplo 3 não deve ser interpretado como prova de que essa proteção existe.
+4. **Permissões:** na primeira revisão, a chave pública acessava gabaritos e inseria partidas. Após o pedido real de correção, foram aplicadas migrações pelo GitHub. Consultas reais passaram a negar perguntas e escrita/leitura de partidas para a chave pública, mantendo jogos e ranking disponíveis. Os resultados estão em TESTES.md. A execução privada no Colab ainda deve ser confirmada pela equipe.
 5. **Organização do registro de IA:** as reconstruções foram separadas dos pedidos reais deste chat e dos resultados de testes. Essa distinção permite avaliar o documento sem atribuir a exemplos a condição de registro histórico confirmado.
 
 ## Testes reais disponíveis no projeto
@@ -191,7 +191,7 @@ Na revisão anterior à elaboração deste documento, foram executados 12 testes
 
 ## Perguntas, gabaritos e fontes
 
-O script `database.sql` contém 18 perguntas, com gabaritos e referências. A revisão disponível confirmou a estrutura e a distribuição das perguntas, mas não realizou a conferência externa individual de todas as fontes e respostas. Essa etapa permanece a cargo da equipe; não deve ser declarada concluída sem verificação.
+O script `database.sql` contém 18 perguntas, com gabaritos e referências. Na revisão final, as respostas foram comparadas a fontes primárias consultadas online e os exemplos Python foram executados. As justificativas, fontes e dois esclarecimentos de enunciado estão em REVISAO_PERGUNTAS.md. A equipe deve conferir e compreender o conteúdo para a apresentação.
 
 ## Sugestão de declaração ao professor
 
@@ -258,3 +258,5 @@ faz isso, eu te dou permissao
 ```
 
 Na revisão anterior, a solicitante havia escolhido manter as permissões e registrar a pendência. O pedido acima substitui essa escolha. A descrição anterior é histórica; o estado atual da implantação está em TESTES.md.
+
+Resultado real desta revisão: 18 testes Python e 9 JavaScript aprovados; oito consultas de permissões aprovadas online. Migrações e build do GitHub Pages concluídos. Nenhuma chave privada foi inserida nos arquivos ou fornecida ao assistente.
