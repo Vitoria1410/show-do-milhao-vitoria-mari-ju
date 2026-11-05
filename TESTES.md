@@ -77,11 +77,10 @@ Executada demonstração real pela janela opcional tests/demonstracao_gui.py, qu
 - Duração real registrada: 47,07 segundos; site formatou como 0min 47s.
 - UUID: 57eecb7b-d8ab-4e30-a944-6788e8e3848e.
 - Enviado duas vezes com mesmo UUID; consulta confirmou somente 1 registro.
-- Captura real da execução: evidencias/jogo_python.png.
+- Captura real da execução: evidencias/jogo_python.jpg.
 - Captura real do site: evidencias/ranking_online.jpg.
 - Dados e saída completa: evidencias/demonstracao_partida.json e evidencias/demonstracao_python.txt.
 
 Após encerrar a janela Python, foi confirmado que não havia processo pythonw em execução. O botão Atualizar do site continuou consultando o Supabase e exibiu a mesma partida na posição 4. A captura do ranking foi salva depois desse teste, em 04/11/2026, aproximadamente 21h25, America/Sao_Paulo.
 
 O build inicial validado no GitHub Pages correspondeu ao commit ef2e267fa56564eba3021887048a1383a0bdddd1. A inclusão final destas evidências será publicada no commit de fechamento; o código do site permanece igual ao testado.
-
