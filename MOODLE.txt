@@ -1,0 +1,5 @@
+Integrantes: Mariana Vincente, Julia Santana e Vitória Barreto
+Turma: Primeiro IA A
+Nome do jogo: Show do Milhão - Python e IA
+Repositório GitHub: https://github.com/Vitoria1410/show-do-milhao-vitoria-mari-ju
+Site no GitHub Pages: https://vitoria1410.github.io/show-do-milhao-vitoria-mari-ju/

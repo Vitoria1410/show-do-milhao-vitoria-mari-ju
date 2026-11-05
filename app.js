@@ -125,6 +125,7 @@ async function loadGames() {
   } catch (err) {
     console.error('Erro ao listar jogos:', err);
     gameFilter.innerHTML = '<option value="">Falha ao listar jogos</option>';
+    status.textContent = 'Não foi possível listar os jogos online. Verifique a conexão e tente novamente.';
     return [];
   }
 }
@@ -224,7 +225,13 @@ async function loadRanking() {
 }
 
 // Event Listeners
-refreshButton.addEventListener('click', loadRanking);
+refreshButton.addEventListener('click', async () => {
+  if (!gameFilter.value) {
+    await init();
+  } else {
+    await loadRanking();
+  }
+});
 gameFilter.addEventListener('change', loadRanking);
 
 // Inicialização

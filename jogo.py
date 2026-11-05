@@ -2,7 +2,7 @@
 """Show do Milhão — Python e IA
 
 Jogo de perguntas e respostas integrado com banco Supabase e ranking web.
-Atende a todos os requisitos do projeto:
+Recursos implementados (consulte TESTES.md para pendências):
 - Mínimo de 15 perguntas (5 fáceis, 5 médias, 5 difíceis)
 - Sorteio de 9 perguntas (3 de cada nível)
 - Prêmios progressivos até R$ 1.000.000,00
@@ -58,7 +58,7 @@ class Supabase:
         if not self.url or not self.key:
             raise ValueError(
                 "Configure a chave do Supabase!\n"
-                "Defina a variável SUPABASE_KEY com a chave 'anon' ou 'service_role' do seu projeto."
+                "Defina a variável SUPABASE_KEY com a chave pública permitida pelas políticas do protótipo do seu projeto."
             )
 
         if not self.url.startswith("https://"):
@@ -479,7 +479,7 @@ def main():
 
     # Permite informar a chave caso não esteja em variável de ambiente
     if not os.getenv("SUPABASE_KEY"):
-        chave = input("Digite a chave (anon ou service_role) do Supabase: ").strip()
+        chave = input("Digite a chave pública do Supabase: ").strip()
         if chave:
             os.environ["SUPABASE_KEY"] = chave
 

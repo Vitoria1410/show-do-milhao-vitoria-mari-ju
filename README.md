@@ -4,12 +4,15 @@ Projeto interdisciplinar de desenvolvimento de um jogo de perguntas e respostas 
 
 ---
 
-## 👥 Identificação da Dupla
-- **Integrante 1:** Mariana Souza (preencher nome completo)
-- **Integrante 2:** Vitória / Juliana (preencher nome completo)
-- **Turma:** [Inserir Turma]
-- **Repositório GitHub:** [https://github.com/Vitoria1410/show-do-milhao-vitoria-mari-ju](https://github.com/Vitoria1410/show-do-milhao-vitoria-mari-ju)
-- **Site no GitHub Pages:** [https://vitoria1410.github.io/show-do-milhao-vitoria-mari-ju/](https://vitoria1410.github.io/show-do-milhao-vitoria-mari-ju/)
+## Identificação da equipe
+- Mariana Vincente
+- Julia Santana
+- Vitória Barreto
+- Turma: Primeiro IA A
+- Repositório: https://github.com/Vitoria1410/show-do-milhao-vitoria-mari-ju
+- Site: https://vitoria1410.github.io/show-do-milhao-vitoria-mari-ju/
+
+O enunciado solicita uma dupla; a equipe informada tem três integrantes. Confirmar essa composição com o professor.
 
 ---
 
@@ -52,7 +55,7 @@ O script de criação completo está no arquivo [`database.sql`](database.sql):
 3. Copie todo o conteúdo do arquivo [`database.sql`](database.sql) e clique em **Run**.
 4. Em **Project Settings** > **API**, copie:
    - **Project URL:** `https://mkgbeemjhvpvjmqbwtfl.supabase.co`
-   - **anon public key:** Chave pública de leitura/escrita do cliente.
+   - **anon public key:** Chave pública configurada para este protótipo. Ver a pendência de permissões abaixo.
 
 ### 2. Executar o Jogo em Python (`jogo.py`)
 O código utiliza apenas a biblioteca padrão do Python (`urllib`, `json`, `time`, etc.), sem necessidade de `pip install`.
@@ -89,3 +92,46 @@ E na célula seguinte, execute o conteúdo de [`jogo.py`](jogo.py).
 - [`index.html`](index.html), [`styles.css`](styles.css), [`app.js`](app.js), [`config.js`](config.js): Código do site de ranking web.
 - [`prompts.md`](prompts.md): Registro cronológico de todos os prompts de IA, testes e correções.
 - [`.env.example`](.env.example): Exemplo seguro de variáveis de ambiente sem segredos expostos.
+
+
+## Verificações reais e pendências
+
+Leia TESTES.md. Os testes locais exercitam entradas simuladas e não substituem a apresentação individual. A integração foi consultada no Supabase real; uma partida automática TESTE_AC04, com prêmio zero, foi enviada duas vezes com o mesmo UUID e permaneceu com um único registro. Seu tempo de 0,00s decorre da entrada automática e não representa uma partida humana.
+
+**Permissões pendentes:** a chave pública atual consegue consultar os gabaritos e inserir partidas. Isso contraria a exigência de acesso do site somente à leitura do ranking. A equipe optou por manter a configuração nesta revisão. O site só efetua consultas, mas isso não impede o uso da chave fora dele. Não apresentar a segurança como requisito concluído. A correção requer separar o acesso de escrita/leitura de perguntas do Python do acesso público ao ranking, com orientação do professor. Nunca colocar chave administrativa no frontend ou no ZIP.
+
+**Histórico de IA pendente:** os prompts reais anteriores a este chat não foram recuperados. prompts.md distingue a transcrição disponível de exemplos simulados e não garante a completude do histórico do projeto.
+
+**Evidências:** os registros automatizados estão em evidencias/. Capturas da mesma partida no terminal e no site ainda devem ser conferidas, conforme TESTES.md. Não confundir saídas em texto com capturas de tela.
+
+## Rodar os testes locais
+
+Na raiz do projeto, com Python 3 instalado:
+
+```sh
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+O teste JavaScript usa Node.js, opcional para validar o site:
+
+```sh
+node tests/testar_site.cjs
+```
+
+Os testes automatizados usam entradas e rede simuladas, exceto o teste de integração identificado em TESTES.md. Eles não inserem partidas ao rodar a suíte local.
+
+## Configuração local
+
+O arquivo .env.example é um modelo e não é carregado automaticamente. No PowerShell, defina as variáveis da sessão antes de executar o jogo:
+
+```powershell
+$env:SUPABASE_URL = "https://SEU-PROJETO.supabase.co"
+$env:SUPABASE_KEY = "SUA_CHAVE_DE_CLIENTE_PERMITIDA"
+python jogo.py
+```
+
+Alternativamente, informe a chave pública quando o jogo solicitar. Nunca compartilhe uma chave privada na gravação ou na apresentação.
+
+## Apresentação individual
+
+Cada integrante precisa conseguir explicar e modificar uma função. Estudem calcular_premio e os índices da lista, sortear_perguntas e random.sample, jogar e suas condições de parada, além de salvar_partida e a reutilização do UUID. A avaliação de domínio individual depende da apresentação e não pode ser comprovada por estes testes.

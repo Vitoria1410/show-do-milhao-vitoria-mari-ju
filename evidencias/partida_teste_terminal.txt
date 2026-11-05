@@ -1,0 +1,33 @@
+Teste automatizado com perguntas reais; entrada simulada para errar a primeira questão.
+
+=======================================================
+             SHOW DO MILHÃO
+=======================================================
+
+Boa sorte, TESTE_AC04!
+Digite X caso queira desistir e parar com o prêmio atual.
+
+=======================================================
+PERGUNTA 1/9 — DIFICULDADE: FACIL
+VALOR DESTA ETAPA: R$ 1.000,00
+PRÊMIO GARANTIDO: R$ 0,00
+
+Em Python, qual estrutura de dados é ordenada, mutável e delimitada por colchetes [ ]?
+A) Lista (list)
+B) Tupla (tuple)
+C) Dicionário (dict)
+D) Conjunto (set)
+
+Que pena! Você errou!
+A resposta correta era a alternativa (A).
+
+=======================================================
+                 FIM DE JOGO!
+=======================================================
+Jogador: TESTE_AC04
+Acertos: 0/9
+Prêmio Final: R$ 0,00
+Tempo da partida: 0.0s
+
+ID: 31820a3b-4152-47f5-8cc4-63a07364fadc
+Enviada duas vezes: apenas um registro confirmado no banco.

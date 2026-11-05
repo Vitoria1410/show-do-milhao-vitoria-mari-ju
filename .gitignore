@@ -1,2 +1,9 @@
 .env
-.vercel
+.env.*
+!.env.example
+.vercel/
+__pycache__/
+*.py[cod]
+ranking_local.json
+partidas_pendentes.json
+*.tmp

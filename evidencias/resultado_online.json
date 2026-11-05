@@ -1,0 +1,45 @@
+{
+  "partida": {
+    "id": "31820a3b-4152-47f5-8cc4-63a07364fadc",
+    "jogo_id": 1,
+    "apelido": "TESTE_AC04",
+    "valor_ganho": 0,
+    "tempo_segundos": 0.0,
+    "acertos": 0,
+    "motivo_encerramento": "resposta_errada",
+    "data_hora": "2026-11-05T00:14:55.833404+00:00"
+  },
+  "registros_com_mesmo_id": 1,
+  "ranking": [
+    {
+      "partida_id": "264d7118-a652-455d-ad29-fd87fe219a40",
+      "jogo_id": 1,
+      "nome_jogo": "Show do Milhão - Python e IA",
+      "apelido": "Mari",
+      "valor_ganho": 1000000,
+      "tempo_segundos": 45.2,
+      "data_hora": "2026-11-04T18:38:11.173793+00:00",
+      "posicao": 1
+    },
+    {
+      "partida_id": "2dbe03a0-4794-419d-a45b-a2ef4cc0ade8",
+      "jogo_id": 1,
+      "nome_jogo": "Show do Milhão - Python e IA",
+      "apelido": "Vitoria",
+      "valor_ganho": 500000,
+      "tempo_segundos": 30.5,
+      "data_hora": "2026-11-04T19:13:25.773996+00:00",
+      "posicao": 2
+    },
+    {
+      "partida_id": "31820a3b-4152-47f5-8cc4-63a07364fadc",
+      "jogo_id": 1,
+      "nome_jogo": "Show do Milhão - Python e IA",
+      "apelido": "TESTE_AC04",
+      "valor_ganho": 0,
+      "tempo_segundos": 0.0,
+      "data_hora": "2026-11-05T00:14:55.833404+00:00",
+      "posicao": 3
+    }
+  ]
+}
